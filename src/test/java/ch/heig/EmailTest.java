@@ -6,9 +6,10 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class MyTest {
+public class EmailTest {
 	@Test
-	void trueIsTrue() {
-		assertTrue(true);
+	void emailCanBeParsed() {
+		Email e = new Email("{\"name\":\"Ho\", \"body\":\"hello world\"}");
+		assertEquals(e, e);
 	}
 }
