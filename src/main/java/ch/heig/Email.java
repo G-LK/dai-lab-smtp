@@ -6,13 +6,20 @@ public class Email {
 	private String from;
 	private String[] to;
 
-	public Email(String json) {
+	public Email(String json, String from, String[] to) {
 		parse(json);
+		this.from = from;
+		this.to = to;
 	}
 
-	public String toString() {
+	public String toRawEmailTextData() {
 		// TODO
 		return "";
+	}
+
+	public String[] toRawEmailHeaderLines() {
+		// TODO
+		return new String[] {};
 	}
 
 	private void parse(String json) {
