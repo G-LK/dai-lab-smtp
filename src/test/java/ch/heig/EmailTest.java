@@ -72,12 +72,23 @@ public class EmailTest {
 				"\r\nSubject:" + "Ho" +
 				"\r\n" +
 				"\r\nhello world\r\nThis is a fantastic day !!" +
-				"\r\n\r\n.\r\n"; // TODO: one or 2 \n ??
+				"\r\n.\r\n";
 		assertEquals(expectedRawDataSection, e.toRawEmailTextData());
 	}
 
 	@Test
 	void toRawEmailHeaderLinesWorks() {
-		
+		Email e = new Email("{\"subject\":\"Ho\", \"body\":\"hello world\\nThis is a fantastic day !!\"}", from, to);
+		String[] expectedLines = {
+				"MAIL FROM:<" + from + ">\r\n",
+				"RCPT TO:<" + to[0] + ">\r\n",
+				"RCPT TO:<" + to[1] + ">\r\n",
+				"DATA\r\n" };
+		// TODO: check with teacher on uppercase letter okay as this is shown in spec
+		// examples.
+		assertEquals(expectedLines, e.toRawEmailHeaderLines());
 	}
+
+	//TODO: add validation tests (see readme)
+	//TODO: add utf8 support tests (see readme)
 }
