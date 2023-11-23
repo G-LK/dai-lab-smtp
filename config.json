@@ -1,0 +1,29 @@
+{
+	"groupNumber": 5,
+	"addresses": [
+		"hey@example.com",
+		"hello@example.com",
+		"john@example.com",
+		"alice@example.com",
+		"luke@example.com",
+		"ben@example.com"
+	],
+	"messages": [
+		{
+			"subject": "Hey guys",
+			"body": "you won 100000$\nRegards\nThe US president."
+		},
+		{
+			"subject": "Hey investors",
+			"body": "I have a great deal for you\nRegards\nThe US president."
+		},
+		{
+			"subject": "Hot pic",
+			"body": "Click on this link to see it\nThe US president."
+		},
+		{
+			"subject": "Mortage proposition",
+			"body": "The best deal you ever saw in your life ! 10$ for a huge house !!! \nThe US president."
+		}
+	]
+}
