@@ -1,14 +1,13 @@
 package ch.heig;
-import com.google.gson.Gson;
+
 
 public class Config {
 
-    private int groupNumber;
-    private String[] addresses;
-    private FakeMessage[] messages;
+	int groupNumber;
+	String[] addresses;
+	FakeMessage[] messages;
 
-    public String[] validate() {
-                    
-    }
-    
+	public String[] validate() {
+		return new String[] {};
+	}
 }

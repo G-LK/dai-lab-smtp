@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.nio.charset.*;
+import com.google.gson.Gson;
 
 public class Sender {
 	final int groupsNB;
@@ -52,16 +53,21 @@ public class Sender {
 	}
 
 	public void loadConfig() {
-		BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(json), StandardCharsets.UTF_8));
+		try (BufferedReader in = new BufferedReader(
+				new InputStreamReader(new FileInputStream("config.json"), StandardCharsets.UTF_8))) {
+			String line;
+			String json = "";
 
-		String line;
-		String json;
+			while ((line = in.readLine()) != null) {
+				json += line + '\n';
+			}
 
-		while((line = in.readLine()) != null) {
-			json += line + '\n';
+			Gson gson = new Gson();
+			config = gson.fromJson(json, Config.class);
+			
+		} catch (Exception e) {
+			System.out.println("Error in JSON file reading: " + e);
 		}
-		
-		config = gson.fromJson(json, Config.class);
 
 	}
 }

@@ -1,5 +1,6 @@
+package ch.heig;
+
 public class FakeMessage {
-    
-    private String subject;
-    private String body;
+	String subject;
+	String body;
 }

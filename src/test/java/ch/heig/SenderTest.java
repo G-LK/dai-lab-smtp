@@ -38,6 +38,13 @@ public class SenderTest {
 			assertTrue(e.getTo().length <= 4);
 		}
 
-		//Add more tests related to README instructions...
+		// Add more tests related to README instructions...
+	}
+
+	@Test
+	void configCanBeLoaded() {
+		Sender s = new Sender(5, "data/messages.json", "data/victims.txt");
+		s.loadConfig();
+		assertEquals(5, s.config.groupNumber);
 	}
 }
