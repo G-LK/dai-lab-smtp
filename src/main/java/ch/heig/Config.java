@@ -1,3 +1,6 @@
+package ch.heig;
+import com.google.gson.Gson;
+
 public class Config {
 
     private int groupNumber;
@@ -5,7 +8,7 @@ public class Config {
     private FakeMessage[] messages;
 
     public String[] validate() {
-                
+                    
     }
     
 }
