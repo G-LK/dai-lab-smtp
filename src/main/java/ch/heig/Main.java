@@ -2,7 +2,7 @@ package ch.heig;
 
 public class Main {
 	public static void main(String[] args) {
-		Sender sender = new Sender(5, "data/messages.json", "data/victims.txt");
+		Sender sender = new Sender();
 		System.out.println("\nStarting fake emails campaign...");
 		System.out.println(
 				"Preparing the emails, senders and recipients. (Randomly generated from data/messages.json and data/victims.txt)");

@@ -8,31 +8,18 @@ import java.nio.charset.*;
 import com.google.gson.Gson;
 
 public class Sender {
-	final int groupsNB;
 	Email[] emails;
-	String messagesFilePath;
-	String victimsFilePath;
-	String[] victimsList;
 	Config config;
+	static final String CONFIG_FILE = "config.json";
 
 	// TODO
-	public Sender(int groupsNB, String messagesFilePath, String victimsFilePath) {
-		this.groupsNB = groupsNB;
-		this.messagesFilePath = messagesFilePath;
-		this.victimsFilePath = victimsFilePath;
+	public Sender() {
+		loadConfig();
 	}
 
 	public void prepare() {
 		// TODO extractions
 		generateEmails();
-	}
-
-	public String[] getVictimsList() {
-		return victimsList;
-	}
-
-	public String[] getMessages() {
-		return victimsList;
 	}
 
 	// TODO:
@@ -54,7 +41,7 @@ public class Sender {
 
 	public void loadConfig() {
 		try (BufferedReader in = new BufferedReader(
-				new InputStreamReader(new FileInputStream("config.json"), StandardCharsets.UTF_8))) {
+				new InputStreamReader(new FileInputStream(CONFIG_FILE), StandardCharsets.UTF_8))) {
 			String line;
 			String json = "";
 
@@ -64,7 +51,7 @@ public class Sender {
 
 			Gson gson = new Gson();
 			config = gson.fromJson(json, Config.class);
-			
+
 		} catch (Exception e) {
 			System.out.println("Error in JSON file reading: " + e);
 		}

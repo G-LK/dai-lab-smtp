@@ -7,28 +7,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SenderTest {
-
-	@Test
-	void prepareCorrectlyExtractsVictimsAndMessages() {
-		// TODO: should have a single config file ? including the N parameter ?
-		Sender s = new Sender(5, "data/messages.json", "data/victims.txt");
-		assertEquals(new String[] {}, s.getVictimsList());
-		s.prepare();
-		assertEquals(
-				new String[] { "hey@example.com",
-						"hello@example.com",
-						"john@example.com",
-						"alice@example.com",
-						"luke@example.com",
-						"ben@example.com" },
-				s.getVictimsList());
-
-		// TODO: test messages have been extracted
-	}
-
 	@Test
 	void generateEmailsWorks() {
-		Sender s = new Sender(5, "data/messages.json", "data/victims.txt");
+
+		Sender s = new Sender();
 		assertEquals(new Email[] {}, s.getEmails());
 		s.prepare();
 		s.generateEmails();
@@ -43,8 +25,23 @@ public class SenderTest {
 
 	@Test
 	void configCanBeLoaded() {
-		Sender s = new Sender(5, "data/messages.json", "data/victims.txt");
+		Sender s = new Sender();
 		s.loadConfig();
 		assertEquals(5, s.config.groupNumber);
+		assertEquals(
+				new String[] { "hey@example.com",
+						"hello@example.com",
+						"john@example.com",
+						"alice@example.com",
+						"luke@example.com",
+						"ben@example.com" },
+				s.config.addresses);
+
+		// Make sure the first message is loaded (others are probably too)
+		var e = new FakeMessage();
+		e.subject = "Hey guys";
+		e.body = "you won 100000$\nRegards\nThe US president.";
+		assertEquals(e, s.config.messages[0]);
+		assertEquals(4, s.config.messages.length);
 	}
 }
