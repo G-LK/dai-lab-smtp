@@ -56,12 +56,24 @@ public class EmailTest {
 
 		String expectedRawDataSection = "From: <" + from + ">" +
 				"\r\nTo: <" + to[0] + ">, <" + to[1] + ">" +
-				// "\r\n" + "Date: January 1st"; //TODO: decide on whether we use a date or not
-				// since it is maybe not required
-				"\r\nSubject:" + "Ho" +
+				"\r\nSubject:" + "=?utf-8?Q?" + "SG8=" + "?=" +
 				"\r\nContent-Type: text/plain; charset=utf-8" + // line always present
 				"\r\n" +
 				"\r\nhello\r\n ... \r\n world\r\nThis is a fantastic day !!" +
+				"\r\n.\r\n";
+		assertEquals(expectedRawDataSection, e.toRawEmailTextData());
+	}
+
+	@Test
+	void toRawEmailTextDataWithUTF8SubjectAndBody() {
+		Email e = new Email("hello lion 🦁🦁 ó¿¡á", "🦁🦁🦁🦁🦁🍿🍿🍿🍿🍿🍿🍿", from, to);
+
+		String expectedRawDataSection = "From: <" + from + ">" +
+				"\r\nTo: <" + to[0] + ">, <" + to[1] + ">" +
+				"\r\nSubject:" + "=?utf-8?Q?" + "aGVsbG8gbGlvbiDwn6aB8J+mgSDDs8K/wqHDoQ==" + "?=" +
+				"\r\nContent-Type: text/plain; charset=utf-8" + // line always present
+				"\r\n" +
+				"\r\n🦁🦁🦁🦁🦁🍿🍿🍿🍿🍿🍿🍿" +
 				"\r\n.\r\n";
 		assertEquals(expectedRawDataSection, e.toRawEmailTextData());
 	}
@@ -76,7 +88,7 @@ public class EmailTest {
 				"DATA\r\n" };
 		// TODO: check with teacher on uppercase letter okay as this is shown in spec
 		// examples.
-		assertEquals(expectedLines, e.toRawEmailHeaderLines());
+		assertEquals(expectedLines.toString(), e.toRawEmailHeaderLines().toString());
 	}
 
 	// TODO: add validation tests (see readme)
