@@ -26,8 +26,7 @@ public class EmailTest {
 	@Test
 	void parseWithInvalidArgumentsFails() {
 		// Make sure empty "to" array is refused
-		assertThrows(RuntimeException.class, () -> {
-			new Email(subject, body, from, new String[] {});
+		assertThrows(RuntimeException.class, () -> { new Email(subject, body, from, new String[] {});
 		});
 		// Make sure empty "from" is refused
 		assertThrows(RuntimeException.class, () -> {

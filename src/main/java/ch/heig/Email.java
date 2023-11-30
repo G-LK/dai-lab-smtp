@@ -30,7 +30,7 @@ public class Email {
 		String result = "From: <" + from + ">" +
 				"\r\nTo: " + itTo +
 				"\r\nSubject:" + "=?utf-8?Q?" + 
-				getSubject() + "?=" +
+				getBase64EncodedSubject() + "?=" +
 				"\r\n" + CONTENT_TYPE +
 				"\r\n\r\n" + getBody() +
 				"\r\n.\r\n";
@@ -54,6 +54,10 @@ public class Email {
 	}
 
 	public String getSubject() {
+		return subject;
+	}
+
+	public String getBase64EncodedSubject() {
 		return new String(Base64.getEncoder().encode(subject.getBytes()));
 	}
 
