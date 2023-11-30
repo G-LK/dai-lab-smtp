@@ -5,13 +5,36 @@
 
 	<groupId>ch.heig</groupId>
 	<artifactId>smtp</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 
 	<properties>
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>ch.heig.Main</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.1.2</version>
+			</plugin>
+
+		</plugins>
+	</build>
 
 	<dependencyManagement>
 		<dependencies>
@@ -37,10 +60,10 @@
 			<version>1.1.1</version>
 		</dependency>
 		<dependency>
-      		<groupId>com.google.code.gson</groupId>
-      		<artifactId>gson</artifactId>
-      		<version>2.10.1</version>
-    	</dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10.1</version>
+		</dependency>
 	</dependencies>
 
 </project>
