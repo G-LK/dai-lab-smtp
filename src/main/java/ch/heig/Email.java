@@ -10,35 +10,31 @@ public class Email {
 	private final static String CONTENT_TYPE = "Content-Type: text/plain; charset=utf-8";
 
 	public Email(String subject, String body, String from, String[] to) {
-		if (to == null || to.length == 0) {
+		if (to == null || to.length == 0)
 			throw new RuntimeException("cannot create empty email");
-		}
 
-		if (from == null || from.isEmpty()) {
+		if (from == null || from.isEmpty())
 			throw new RuntimeException("cannot create email without sender");
-		}
 
-		if (subject == null || subject.isEmpty()) {
+		if (subject == null || subject.isEmpty())
 			throw new RuntimeException("cannot create email without subject");
-		}
 
-		if (body == null || body.isEmpty()) {
+		if (body == null || body.isEmpty())
 			throw new RuntimeException("cannot send email without a body");
-		}
+
 		this.subject = subject;
 		this.body = body;
 		this.from = from;
 		this.to = to;
 	}
 
+	// Returns the raw email data (with headers and body)
+	// to give after the DATA SMTP command
 	public String toRawEmailTextData() {
-		// TODO
-
 		String itTo = "";
 		for (int i = 0; i < to.length; i++) {
-			if (i > 0) {
+			if (i > 0)
 				itTo += ", ";
-			}
 			itTo += "<" + to[i] + ">";
 		}
 
@@ -47,25 +43,24 @@ public class Email {
 				"\r\nSubject:" + "=?utf-8?Q?" +
 				getBase64EncodedSubject() + "?=" +
 				"\r\n" + CONTENT_TYPE +
-				"\r\n\r\n" + getBody() +
-				"\r\n.\r\n";
+				"\r\n\r\n" // empty line to mark the end of headers
+				+ getBody() +
+				"\r\n.\r\n"; // final line to indicate the end of the body
 
 		return result;
 	}
 
+	// Returns the "header" lines of the SMTP commands before email content
 	public String[] toRawEmailHeaderLines() {
-		// TODO
 		int count = 0;
-		String[] lignes = new String[to.length + 2];
-		lignes[0] = "MAIL FROM:<" + from + ">\r\n";
-		++count;
+		String[] lines = new String[to.length + 2];
+		lines[count++] = "MAIL FROM:<" + from + ">\r\n";
 		for (int i = 0; i < to.length; i++) {
-			lignes[count] = "RCPT TO:<" + to[i] + ">\r\n";
-			count++;
+			lines[count++] = "RCPT TO:<" + to[i] + ">\r\n";
 		}
-		lignes[count] = "DATA\r\n";
+		lines[count] = "DATA\r\n";
 
-		return lignes;
+		return lines;
 	}
 
 	public String getSubject() {
@@ -87,5 +82,4 @@ public class Email {
 	public String[] getTo() {
 		return to;
 	}
-
 }
