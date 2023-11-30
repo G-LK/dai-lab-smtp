@@ -15,12 +15,22 @@ public class Email {
 
 	public String toRawEmailTextData() {
 		// TODO
-		return "";
+		return "From: <" + from + ">" + 
+				"\r\nTo: <" + to + ">" +
+				"\r\nSubject:" + subject + 
+				"\r\n\r\n" + body + 
+				"\r\n.\r\n";
 	}
 
 	public String[] toRawEmailHeaderLines() {
 		// TODO
-		return new String[] {};
+		String[] result = {
+				"MAIL FROM:<" + from + ">\r\n",
+				"RCPT TO:<" + to[0] + ">\r\n",
+				"RCPT TO:<" + to[1] + ">\r\n",
+				"DATA\r\n" };
+
+		return result;
 	}
 
 	public String getSubject() {
