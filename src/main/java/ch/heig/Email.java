@@ -10,19 +10,19 @@ public class Email {
 	private final static String CONTENT_TYPE = "Content-Type: text/plain; charset=utf-8";
 
 	public Email(String subject, String body, String from, String[] to) {
-		if(to == null || to.length == 0) {
+		if (to == null || to.length == 0) {
 			throw new RuntimeException("cannot create empty email");
-		} 
-		
-		if(from == null || from.isEmpty()) {
+		}
+
+		if (from == null || from.isEmpty()) {
 			throw new RuntimeException("cannot create email without sender");
-		} 
-		
-		if(subject == null || subject.isEmpty()) {
+		}
+
+		if (subject == null || subject.isEmpty()) {
 			throw new RuntimeException("cannot create email without subject");
-		} 
-		
-		if(body == null || body.isEmpty()) {
+		}
+
+		if (body == null || body.isEmpty()) {
 			throw new RuntimeException("cannot send email without a body");
 		}
 		this.subject = subject;
@@ -44,7 +44,7 @@ public class Email {
 
 		String result = "From: <" + from + ">" +
 				"\r\nTo: " + itTo +
-				"\r\nSubject:" + "=?utf-8?Q?" + 
+				"\r\nSubject:" + "=?utf-8?Q?" +
 				getBase64EncodedSubject() + "?=" +
 				"\r\n" + CONTENT_TYPE +
 				"\r\n\r\n" + getBody() +
@@ -78,7 +78,6 @@ public class Email {
 
 	public String getBody() {
 		return body.replace("\n", "\r\n");
-		
 	}
 
 	public String getFrom() {
