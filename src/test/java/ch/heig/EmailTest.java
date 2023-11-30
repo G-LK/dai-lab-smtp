@@ -54,8 +54,8 @@ public class EmailTest {
 	void toRawEmailTextDataWorks() {
 		Email e = new Email("Ho", "hello\n ... \n world\nThis is a fantastic day !!", from, to);
 
-		String expectedRawDataSection = "From: " + from +
-				"\r\nTo: " + to +
+		String expectedRawDataSection = "From: <" + from + ">" +
+				"\r\nTo: <" + to + ">" +
 				// "\r\n" + "Date: January 1st"; //TODO: decide on whether we use a date or not
 				// since it is maybe not required
 				"\r\nSubject:" + "Ho" +
