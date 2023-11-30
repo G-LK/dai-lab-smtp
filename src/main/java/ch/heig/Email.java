@@ -6,8 +6,9 @@ public class Email {
 	private String from;
 	private String[] to;
 
-	public Email(String json, String from, String[] to) {
-		parse(json);
+	public Email(String subject, String body, String from, String[] to) {
+		this.subject = subject;
+		this.body = body;
 		this.from = from;
 		this.to = to;
 	}
@@ -20,10 +21,6 @@ public class Email {
 	public String[] toRawEmailHeaderLines() {
 		// TODO
 		return new String[] {};
-	}
-
-	private void parse(String json) {
-		// TODO
 	}
 
 	public String getSubject() {
