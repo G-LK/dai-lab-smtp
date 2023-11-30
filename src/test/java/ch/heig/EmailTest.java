@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class EmailTest {
 	final static String from = "alice@localhost.com";
@@ -47,7 +48,7 @@ public class EmailTest {
 		// Make sure that \n are converted to \r\n
 		Email e = new Email("Ho", "hello\n ... \n world", from, to);
 		assertEquals("Ho", e.getSubject());
-		assertEquals("hello\r\n ... \r\n world\r\n\r\n", e.getBody());
+		assertEquals("hello\r\n ... \r\n world", e.getBody());
 	}
 
 	@Test
@@ -88,7 +89,7 @@ public class EmailTest {
 				"DATA\r\n" };
 		// TODO: check with teacher on uppercase letter okay as this is shown in spec
 		// examples.
-		assertEquals(expectedLines.toString(), e.toRawEmailHeaderLines().toString());
+		assertArrayEquals(expectedLines, e.toRawEmailHeaderLines());
 	}
 
 	// TODO: add validation tests (see readme)
