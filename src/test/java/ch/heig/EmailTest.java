@@ -55,10 +55,11 @@ public class EmailTest {
 		Email e = new Email("Ho", "hello\n ... \n world\nThis is a fantastic day !!", from, to);
 
 		String expectedRawDataSection = "From: <" + from + ">" +
-				"\r\nTo: <" + to + ">" +
+				"\r\nTo: <" + to[0] + ">, <" + to[1] + ">" +
 				// "\r\n" + "Date: January 1st"; //TODO: decide on whether we use a date or not
 				// since it is maybe not required
 				"\r\nSubject:" + "Ho" +
+				"\r\nContent-Type: text/plain; charset=utf-8" + // line always present
 				"\r\n" +
 				"\r\nhello\r\n ... \r\n world\r\nThis is a fantastic day !!" +
 				"\r\n.\r\n";
