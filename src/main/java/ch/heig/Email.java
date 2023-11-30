@@ -1,5 +1,7 @@
 package ch.heig;
 
+import java.util.Base64;
+
 public class Email {
 	private String subject;
 	private String body;
@@ -24,12 +26,11 @@ public class Email {
 			}
 			itTo += "<" + to[i] + ">";
 		}
-		// change in base 64
-		// String subjectBase64 = new String(DataType)
 
 		String result = "From: <" + from + ">" +
 				"\r\nTo: " + itTo +
-				"\r\nSubject:" + "=?utf-8?Q?" + subject + "?=" +
+				"\r\nSubject:" + "=?utf-8?Q?" + 
+				getSubject() + "?=" +
 				"\r\n" + CONTENT_TYPE +
 				"\r\n\r\n" + getBody() +
 				"\r\n.\r\n";
@@ -53,7 +54,7 @@ public class Email {
 	}
 
 	public String getSubject() {
-		return subject;
+		return new String(Base64.getEncoder().encode(subject.getBytes()));
 	}
 
 	public String getBody() {
