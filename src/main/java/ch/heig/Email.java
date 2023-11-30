@@ -10,6 +10,21 @@ public class Email {
 	private final static String CONTENT_TYPE = "Content-Type: text/plain; charset=utf-8";
 
 	public Email(String subject, String body, String from, String[] to) {
+		if(to == null || to.length == 0) {
+			throw new RuntimeException("cannot create empty email");
+		} 
+		
+		if(from == null || from.isEmpty()) {
+			throw new RuntimeException("cannot create email without sender");
+		} 
+		
+		if(subject == null || subject.isEmpty()) {
+			throw new RuntimeException("cannot create email without subject");
+		} 
+		
+		if(body == null || body.isEmpty()) {
+			throw new RuntimeException("cannot send email without a body");
+		}
 		this.subject = subject;
 		this.body = body;
 		this.from = from;

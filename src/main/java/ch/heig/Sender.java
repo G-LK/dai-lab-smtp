@@ -19,6 +19,16 @@ public class Sender {
 
 	public void prepare() {
 		// TODO extractions
+		// what to do
+		// 1. load config
+		loadConfig();
+		// 2. load victims
+		
+		// 3. load messages
+		// 4. generate emails
+		// 5. send emails
+		
+
 		generateEmails();
 	}
 
