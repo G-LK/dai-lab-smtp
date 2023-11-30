@@ -24,12 +24,14 @@ public class Email {
 			}
 			itTo += "<" + to[i] + ">";
 		}
+		// change in base 64
+		// String subjectBase64 = new String(DataType)
 
 		String result = "From: <" + from + ">" +
 				"\r\nTo: " + itTo +
-				"\r\nSubject:" + subject +
+				"\r\nSubject:" + "=?utf-8?Q?" + subject + "?=" +
 				"\r\n" + CONTENT_TYPE +
-				"\r\n\r\n" + body.replace("\n", "\r\n") +
+				"\r\n\r\n" + getBody() +
 				"\r\n.\r\n";
 
 		return result;
@@ -55,7 +57,8 @@ public class Email {
 	}
 
 	public String getBody() {
-		return body;
+		return body.replace("\n", "\r\n");
+		
 	}
 
 	public String getFrom() {
