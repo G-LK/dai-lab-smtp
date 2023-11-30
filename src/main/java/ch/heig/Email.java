@@ -5,6 +5,7 @@ public class Email {
 	private String body;
 	private String from;
 	private String[] to;
+	private final static String CONTENT_TYPE = "Content-Type: text/plain; charset=utf-8";
 
 	public Email(String subject, String body, String from, String[] to) {
 		this.subject = subject;
@@ -15,11 +16,25 @@ public class Email {
 
 	public String toRawEmailTextData() {
 		// TODO
-		return "From: <" + from + ">" + 
-				"\r\nTo: <" + to + ">" +
+		
+			String itTo = "";
+			for(int i = 0; i < to.length; i++) {
+				if(i > 0) {
+					itTo += ", ";
+				}
+				itTo += "<" + to[i] + ">"; 
+			}
+
+			String result = 
+				"From: <" + from + ">" + 
+				"\r\nTo: " + itTo +
 				"\r\nSubject:" + subject + 
+				"\r\n" + CONTENT_TYPE +
 				"\r\n\r\n" + body + 
 				"\r\n.\r\n";
+		
+		
+		return result;
 	}
 
 	public String[] toRawEmailHeaderLines() {
