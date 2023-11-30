@@ -16,36 +16,38 @@ public class Email {
 
 	public String toRawEmailTextData() {
 		// TODO
-		
-			String itTo = "";
-			for(int i = 0; i < to.length; i++) {
-				if(i > 0) {
-					itTo += ", ";
-				}
-				itTo += "<" + to[i] + ">"; 
-			}
 
-			String result = 
-				"From: <" + from + ">" + 
+		String itTo = "";
+		for (int i = 0; i < to.length; i++) {
+			if (i > 0) {
+				itTo += ", ";
+			}
+			itTo += "<" + to[i] + ">";
+		}
+
+		String result = "From: <" + from + ">" +
 				"\r\nTo: " + itTo +
-				"\r\nSubject:" + subject + 
+				"\r\nSubject:" + subject +
 				"\r\n" + CONTENT_TYPE +
-				"\r\n\r\n" + body + 
+				"\r\n\r\n" + body.replace("\n", "\r\n") +
 				"\r\n.\r\n";
-		
-		
+
 		return result;
 	}
 
 	public String[] toRawEmailHeaderLines() {
 		// TODO
-		String[] result = {
-				"MAIL FROM:<" + from + ">\r\n",
-				"RCPT TO:<" + to[0] + ">\r\n",
-				"RCPT TO:<" + to[1] + ">\r\n",
-				"DATA\r\n" };
+		int count = 0;
+		String[] lignes = new String[to.length + 2];
+		lignes[0] = "MAIL FROM:<" + from + ">\r\n";
+		++count;
+		for (int i = 0; i < to.length; i++) {
+			lignes[count] = "RCPT TO:<" + to[i] + ">\r\n";
+			count++;
+		}
+		lignes[count] = "DATA\r\n";
 
-		return result;
+		return lignes;
 	}
 
 	public String getSubject() {
