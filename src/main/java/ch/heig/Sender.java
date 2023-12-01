@@ -77,7 +77,21 @@ public class Sender {
 
 	private boolean sendEmails(BufferedReader in, BufferedWriter out) {
 		// TODO: read lines until there is no dash after first number
+		try {
+		String line;
+		while((line = in.readLine()) != null) {
+			if(line.charAt(3) != '-') { // 250-
+
+			}
+		}
+	} catch(IOException e) {
+		System.out.println("cannot read line correctly");
+	}
+
 		// TODO: loop on all emails
+		for(var e : emails) {
+
+		}
 		// TODO: send each email intro line and
 		// TODO: read lines until there is no dash after first number (you can ignore
 		// the read lines' content)
