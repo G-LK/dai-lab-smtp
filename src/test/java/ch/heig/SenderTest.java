@@ -56,12 +56,12 @@ public class SenderTest {
 						"alice@example.com",
 						"luke@example.com",
 						"ben@example.com" },
-				s.config.addresses);
+				s.config.victims);
 
 		// Make sure the first message is loaded (others are probably too)
 
-		assertEquals("Hey guys", s.config.messages[0].subject);
-		assertEquals("you won 100000$\nRegards\nThe US president.", s.config.messages[0].body);
+		assertEquals("Hey investors", s.config.messages[1].subject);
+		assertEquals("I have a great deal for you\nRegards\nThe US president.", s.config.messages[1].body);
 		assertEquals(4, s.config.messages.length);
 	}
 }

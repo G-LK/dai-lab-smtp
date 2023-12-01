@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 
-
 public class Sender {
 	ArrayList<Email> emails = new ArrayList<>();
 	Config config;
@@ -58,7 +57,14 @@ public class Sender {
 
 	void loadConfig() {
 		config = new Config();
+		String[] errors = config.validate();
+		if (errors.length > 0) {
+			System.out.println("Some validation checks on configuration files:");
+			for (var err : errors) {
+				System.out.println("- " + err);
+			}
+			throw new RuntimeException("Configuration error");
+		}
 	}
-
 
 }
