@@ -40,7 +40,7 @@ public class Email {
 
 		String result = "From: <" + from + ">" +
 				"\r\nTo: " + itTo +
-				"\r\nSubject:" + "=?utf-8?Q?" +
+				"\r\nSubject: " + "=?utf-8?Q?" +
 				getBase64EncodedSubject() + "?=" +
 				"\r\n" + CONTENT_TYPE +
 				"\r\n\r\n" // empty line to mark the end of headers
@@ -88,7 +88,7 @@ public class Email {
 		for (var t : to) {
 			result += t + ", ";
 		}
-		result += "\nContent:" + subject + "\n" + body;
+		result += "\nContent:" + subject + "\n" + body + "\n";
 		return result;
 	}
 }

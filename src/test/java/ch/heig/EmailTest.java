@@ -56,7 +56,7 @@ public class EmailTest {
 
 		String expectedRawDataSection = "From: <" + from + ">" +
 				"\r\nTo: <" + to[0] + ">, <" + to[1] + ">" +
-				"\r\nSubject:" + "=?utf-8?Q?" + "SG8=" + "?=" +
+				"\r\nSubject: " + "=?utf-8?Q?" + "SG8=" + "?=" +
 				"\r\nContent-Type: text/plain; charset=utf-8" + // line always present
 				"\r\n" +
 				"\r\nhello\r\n ... \r\n world\r\nThis is a fantastic day !!" +
@@ -70,7 +70,7 @@ public class EmailTest {
 
 		String expectedRawDataSection = "From: <" + from + ">" +
 				"\r\nTo: <" + to[0] + ">, <" + to[1] + ">" +
-				"\r\nSubject:" + "=?utf-8?Q?" + "aGVsbG8gbGlvbiDwn6aB8J+mgSDDs8K/wqHDoQ==" + "?=" +
+				"\r\nSubject: " + "=?utf-8?Q?" + "aGVsbG8gbGlvbiDwn6aB8J+mgSDDs8K/wqHDoQ==" + "?=" +
 				"\r\nContent-Type: text/plain; charset=utf-8" + // line always present
 				"\r\n" +
 				"\r\n🦁🦁🦁🦁🦁🍿🍿🍿🍿🍿🍿🍿" +
