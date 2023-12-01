@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
-
 public class Sender {
 	ArrayList<Email> emails;
 	Config config;
@@ -70,6 +69,8 @@ public class Sender {
 			out.close();
 		} catch (IOException e) {
 			System.out.println("Failed to write message ehlo localhost to socket");
+		} catch (InterruptedException e) {
+			System.out.println("Sleep failed");
 		}
 		return result;
 	}
@@ -136,9 +137,10 @@ public class Sender {
 		}
 	}
 
-	private void writeAndLog(BufferedWriter out, String text) throws IOException {
+	private void writeAndLog(BufferedWriter out, String text) throws IOException, InterruptedException {
 		System.out.println("C: " + text);
 		out.write(text);
+		Thread.sleep(200);
 	}
 
 	private void loadConfig() {
