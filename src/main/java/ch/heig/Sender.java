@@ -1,70 +1,64 @@
 package ch.heig;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.nio.charset.*;
-import com.google.gson.Gson;
+import java.io.BufferedWriter;
+import java.net.Socket;
+import java.util.ArrayList;
+
 
 public class Sender {
-	Email[] emails;
+	ArrayList<Email> emails = new ArrayList<>();
 	Config config;
-	static final String CONFIG_FILE = "config.json";
+	int groupsNumber;
 
 	// TODO
-	public Sender() {
+	public Sender(int groupsNumberString) {
+		if (groupsNumberString < 1)
+			throw new RuntimeException();
 		loadConfig();
 	}
 
-	public void prepare() {
-		// TODO extractions
-		// what to do
-		// 1. load config
-		loadConfig();
-		// 2. load victims
-		
-		// 3. load messages
-		// 4. generate emails
-		// 5. send emails
-		
-
-		generateEmails();
+	public boolean prepare() {
+		return generateEmails();
 	}
 
 	// TODO:
-	public void send() {
-		sendEmails();
+	public boolean connectAndSend() {
+		// TODO: open a socket on port Main.SMTP_PORT
+		// print error message in case of error and return false to exit
+		return connectAndSend(null /* socket */);
 	}
 
-	void generateEmails() {
-
+	public boolean connectAndSend(Socket socket) {
+		// TODO: check socket is not null or return false
+		// TODO:
+		return sendEmails(null, null); // TODO: give in and out streams
 	}
 
-	public Email[] getEmails() {
+	boolean generateEmails() {
+		return true;
+	}
+
+	public ArrayList<Email> getEmails() {
 		return emails;
 	}
 
-	public void sendEmails() {
+	private boolean sendEmails(BufferedReader in, BufferedWriter out) {
+		// TODO: write a "ehlo localhost"
+		// TODO: read lines until there is no dash after first number
+		// TODO: loop on all emails
+		// TODO: send each email intro line and
+		// TODO: read lines until there is no dash after first number (you can ignore
+		// the read lines' content)
+		// TODO: then write the message content in one time
 
+		// TODO: when all messages have been sent, send a "quit"
+		return true;
 	}
 
-	public void loadConfig() {
-		try (BufferedReader in = new BufferedReader(
-				new InputStreamReader(new FileInputStream(CONFIG_FILE), StandardCharsets.UTF_8))) {
-			String line;
-			String json = "";
-
-			while ((line = in.readLine()) != null) {
-				json += line + '\n';
-			}
-
-			Gson gson = new Gson();
-			config = gson.fromJson(json, Config.class);
-
-		} catch (Exception e) {
-			System.out.println("Error in JSON file reading: " + e);
-		}
-
+	void loadConfig() {
+		config = new Config();
 	}
+
+
 }
