@@ -9,13 +9,13 @@ public class Main {
 
 	public static void main(String[] args) {
 		// Making sure the number of group is given and valid
-		if (args.length < 2) {
+		if (args.length < 1) {
 			System.out.println("Erreur: le premier paramètre doit être le nombre de groupes.");
 			System.exit(1);
 		}
 		int groupsNumber = 0;
 		try {
-			groupsNumber = Integer.parseInt(args[1]);
+			groupsNumber = Integer.parseInt(args[0]);
 		} catch (NumberFormatException e) {
 			System.out.println("Erreur: Le nombre de groupes fourni n'est pas un nombre entier.");
 			System.exit(1);

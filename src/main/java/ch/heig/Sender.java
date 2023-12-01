@@ -60,13 +60,13 @@ public class Sender {
 					new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-			out.write("ehlo localhost\r\n");
+			writeAndLog(out, "ehlo localhost\r\n");
 			consumeLines(in);
 
 			out.flush();
 			result = sendEmails(in, out);
 
-			out.write("quit\r\n");
+			writeAndLog(out, "quit\r\n");
 			consumeLines(in);
 
 			out.close();
@@ -83,16 +83,21 @@ public class Sender {
 			FakeMessage msg = config.messages[randomMessageIndex];
 			int randomVictimsNumber = random.nextInt(Main.MAX_VICTIMS_PER_GROUP - Main.MIN_VICTIM_PER_GROUP)
 					+ Main.MIN_VICTIM_PER_GROUP;
-			String[] to = new String[randomVictimsNumber];
+			String[] to = new String[randomVictimsNumber - 1];
 			String from;
-			
+
 			Collections.shuffle(Arrays.asList(config.victims));
 			from = config.victims[0];
 			for (int j = 1; j < randomVictimsNumber; j++) {
-				to[j] = config.victims[j];
+				to[j - 1] = config.victims[j];
 			}
-			
+
 			emails.add(new Email(msg.subject, msg.body, from, to));
+		}
+
+		System.out.println("Logging generated emails");
+		for (var e : emails) {
+			System.out.println(e);
 		}
 		return true;
 	}
@@ -105,10 +110,10 @@ public class Sender {
 		try {
 			for (var e : emails) {
 				for (var line : e.toRawEmailHeaderLines()) {
-					out.write(line);
+					writeAndLog(out, line);
 					consumeLines(in);
 				}
-				out.write(e.toRawEmailTextData());
+				writeAndLog(out, e.toRawEmailTextData());
 				consumeLines(in);
 			}
 		} catch (Exception e) {
@@ -123,6 +128,7 @@ public class Sender {
 		try {
 			String line;
 			while ((line = in.readLine()) != null) {
+				System.out.println("S: " + line);
 				if (line.charAt(3) != '-') { // 250-
 					break;
 				}
@@ -130,6 +136,11 @@ public class Sender {
 		} catch (IOException e) {
 			System.out.println("cannot read line correctly");
 		}
+	}
+
+	private void writeAndLog(BufferedWriter out, String text) throws IOException {
+		System.out.println("C: " + text);
+		out.write(text);
 	}
 
 	private void loadConfig() {
