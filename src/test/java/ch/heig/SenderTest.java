@@ -18,13 +18,13 @@ public class SenderTest {
 		Sender s = new Sender(5);
 		assertEquals(null, s.getEmails());
 
-		s.prepare();
+		
 		// Run 100 times the email generation to make sure we can catch errors
 		// even with random in play
 		for (int i = 0; i < 100; i++) {
 			s.generateEmails();
 			var emails = s.getEmails();
-			assertTrue(s.getEmails().length > 0);
+			assertTrue(s.getEmails().size() > 0);
 			for (var e : emails) {
 				HashSet<String> toList = new HashSet<>();
 				// Make sure all to adresses are unique

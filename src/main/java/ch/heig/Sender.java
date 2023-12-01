@@ -9,11 +9,14 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.IntSummaryStatistics;
 import java.util.Random;
 
 public class Sender {
-	Email[] emails;
+	ArrayList<Email> emails;
 	Config config;
 	int groupsNumber;
 	private static Random random = new Random(42);
@@ -73,7 +76,7 @@ public class Sender {
 	}
 
 	boolean generateEmails() {
-		emails = new Email[groupsNumber];
+		emails = new ArrayList<Email>(groupsNumber);
 		for (int i = 0; i < groupsNumber; i++) {
 			int randomMessageIndex = random.nextInt(config.messages.length);
 			FakeMessage msg = config.messages[randomMessageIndex];
@@ -81,16 +84,19 @@ public class Sender {
 					+ Main.MIN_VICTIM_PER_GROUP;
 			String[] to = new String[randomVictimsNumber];
 			String from;
+			
+			Collections.shuffle(Arrays.asList(config.victims));
 			from = config.victims[0];
 			for (int j = 1; j < randomVictimsNumber; j++) {
 				to[j] = config.victims[j];
 			}
-			emails[i] = new Email(msg.subject, msg.body, from, to);
+			
+			emails.add(new Email(msg.subject, msg.body, from, to));
 		}
 		return true;
 	}
 
-	public Email[] getEmails() {
+	public ArrayList<Email> getEmails() {
 		return emails;
 	}
 
