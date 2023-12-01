@@ -28,10 +28,12 @@ public class Sender {
 		return connectAndSend(null /* socket */);
 	}
 
-	public boolean connectAndSend(Socket socket) {
+	boolean connectAndSend(Socket socket) {
 		// TODO: check socket is not null or return false
-		// TODO:
-		return sendEmails(null, null); // TODO: give in and out streams
+		// TODO: write a "ehlo localhost"
+		boolean result = sendEmails(null, null); // TODO: give in and out streams
+		// TODO: when all messages have been sent, send a "quit"
+		return result;
 	}
 
 	boolean generateEmails() {
@@ -43,7 +45,6 @@ public class Sender {
 	}
 
 	private boolean sendEmails(BufferedReader in, BufferedWriter out) {
-		// TODO: write a "ehlo localhost"
 		// TODO: read lines until there is no dash after first number
 		// TODO: loop on all emails
 		// TODO: send each email intro line and
@@ -51,11 +52,10 @@ public class Sender {
 		// the read lines' content)
 		// TODO: then write the message content in one time
 
-		// TODO: when all messages have been sent, send a "quit"
 		return true;
 	}
 
-	void loadConfig() {
+	private void loadConfig() {
 		config = new Config();
 		String[] errors = config.validate();
 		if (errors.length > 0) {
