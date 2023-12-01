@@ -1,5 +1,6 @@
 package ch.heig;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 public class Email {
@@ -40,8 +41,8 @@ public class Email {
 
 		String result = "From: <" + from + ">" +
 				"\r\nTo: " + itTo +
-				"\r\nSubject:" + "=?utf-8?Q?" +
-				getBase64EncodedSubject() + "?=" +
+				"\r\nSubject:" + "=?utf-8?B?" +
+				getBase64EncodedSubject(subject) + "?=" +
 				"\r\n" + CONTENT_TYPE +
 				"\r\n\r\n" // empty line to mark the end of headers
 				+ getBody() +
@@ -67,8 +68,9 @@ public class Email {
 		return subject;
 	}
 
-	public String getBase64EncodedSubject() {
-		return new String(Base64.getEncoder().encode(subject.getBytes()));
+	public String getBase64EncodedSubject(String input) {
+		byte[] encodedBytes = Base64.getEncoder().encode(subject.getBytes(StandardCharsets.UTF_8));
+		return new String(encodedBytes, StandardCharsets.UTF_8);
 	}
 
 	public String getBody() {
