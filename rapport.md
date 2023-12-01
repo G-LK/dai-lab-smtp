@@ -34,6 +34,10 @@ Et pour lancer le fichier `.jar` créé sous target, il suffit de lancer:
 ```
 java -jar target/*.jar <number of groups>
 ```
+
+```
+java -XX:+ShowCodeDetailsInExceptionMessages -cp "./target/classes:$HOME/.m2/repository/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar:$HOME/.m2/repository/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar:$HOME/.m2/repository/junit/junit/4.10/junit-4.10.jar:$HOME/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" ch.heig.Main 4
+```
 où `<number of groups>` est un nombre positif de groupes souhaités. Chaque groupe recevra un email et est composé de 2 à 5 adresses de victimes. Une de ces adresses sera utilisée comme expéditeur. Un message est choisi au hasard parmi la liste et utilisé comme sujet et corps de l'email.
 
 Dans l'interface web de maildev on devrait voir le nombre d'emails attendus reçus et le tour est joué !
