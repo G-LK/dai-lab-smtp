@@ -2,8 +2,14 @@ package ch.heig;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.IntSummaryStatistics;
 
 public class Sender {
 	ArrayList<Email> emails = new ArrayList<>();
@@ -25,16 +31,41 @@ public class Sender {
 	public boolean connectAndSend() {
 		// TODO: open a socket on port Main.SMTP_PORT
 		// print error message in case of error and return false to exit
-		return connectAndSend(null /* socket */);
+
+		boolean result = false;
+		try (
+			Socket socket = new Socket("localhost", Main.SMTP_PORT);) {
+			result = connectAndSend(socket);
+		} catch (Exception e) {
+			System.out.println("failed to connect to localhost");
+			
+		}
+		return result;		
 	}
 
 	boolean connectAndSend(Socket socket) {
 		// TODO: check socket is not null or return false
 		// TODO: write a "ehlo localhost"
-		boolean result = sendEmails(null, null); // TODO: give in and out streams
+	 	// TODO: give in and out streams
 		// TODO: when all messages have been sent, send a "quit"
-		return result;
+		boolean result = false;
+		if(socket != null) {
+			try {
+
+			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+		
+			
+			 out.write("ehlo localhost" + "\r\n");
+			 result = sendEmails(in, out);		
+			 out.flush();
+			 out.close();
+			} catch (IOException e) {
+				System.out.println("Failed to write message ehlo localhost to socket");
+			}
 	}
+	return result;
+}
 
 	boolean generateEmails() {
 		return true;
