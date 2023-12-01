@@ -10,11 +10,15 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.IntSummaryStatistics;
+import java.util.Random;
 
 public class Sender {
-	ArrayList<Email> emails = new ArrayList<>();
+	Email[] emails;
 	Config config;
 	int groupsNumber;
+	private static Random random = new Random(42);
+
+	
 
 	// TODO
 	public Sender(int groupsNumberString) {
@@ -70,10 +74,23 @@ public class Sender {
 	}
 
 	boolean generateEmails() {
+		emails = new Email[groupsNumber];
+		for(int i = 0; i < groupsNumber; i++) {
+			int randomMessageIndex = random.nextInt(config.messages.length);
+			FakeMessage msg = config.messages[randomMessageIndex];
+			int randomVictimsNumber = random.nextInt(Main.MAX_VICTIMS_PER_GROUP - Main.MIN_VICTIM_PER_GROUP) + Main.MIN_VICTIM_PER_GROUP;
+			String[] to = new String[randomVictimsNumber];
+			String from;
+			from = config.victims[0];
+			for(int j = 1; j < randomVictimsNumber; j++) {
+				to[j] = config.victims[j];
+			}
+			emails[i] = new Email(msg.subject, msg.body, from, to);
+		} 
 		return true;
 	}
 
-	public ArrayList<Email> getEmails() {
+	public Email[] getEmails() {
 		return emails;
 	}
 

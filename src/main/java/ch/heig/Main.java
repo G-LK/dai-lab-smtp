@@ -4,6 +4,7 @@ public class Main {
 	final static int SMTP_PORT = 1025;
 	final static String VICTIMS_FILE = "victims.json";
 	static final int MAX_VICTIMS_PER_GROUP = 5;
+	static final int MIN_VICTIM_PER_GROUP = 2;
 	static final String MESSAGES_FILE = "messages.json";
 
 	public static void main(String[] args) {
