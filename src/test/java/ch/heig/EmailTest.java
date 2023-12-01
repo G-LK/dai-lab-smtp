@@ -2,7 +2,6 @@ package ch.heig;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -24,7 +23,7 @@ public class EmailTest {
 	}
 
 	@Test
-	void parseWithInvalidArgumentsFails() {
+	void emailObjectSetupWithInvalidArgumentsFails() {
 		// Make sure empty "to" array is refused
 		assertThrows(RuntimeException.class, () -> {
 			new Email(subject, body, from, new String[] {});
@@ -44,7 +43,7 @@ public class EmailTest {
 	}
 
 	@Test
-	void parseUseCorrectLineEndings() {
+	void bodyUseCorrectLineEndings() {
 		// Make sure that \n are converted to \r\n
 		Email e = new Email("Ho", "hello\n ... \n world", from, to);
 		assertEquals("Ho", e.getSubject());
@@ -87,11 +86,6 @@ public class EmailTest {
 				"RCPT TO:<" + to[0] + ">\r\n",
 				"RCPT TO:<" + to[1] + ">\r\n",
 				"DATA\r\n" };
-		// TODO: check with teacher on uppercase letter okay as this is shown in spec
-		// examples.
 		assertArrayEquals(expectedLines, e.toRawEmailHeaderLines());
 	}
-
-	// TODO: add validation tests (see readme)
-	// TODO: add utf8 support tests (see readme)
 }
