@@ -51,7 +51,7 @@ public class Sender {
 		// TODO: read lines until there is no dash after first number (you can ignore
 		// the read lines' content)
 		// TODO: then write the message content in one time
-
+		// TODO: read line again
 		return true;
 	}
 
