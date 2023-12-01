@@ -6,6 +6,10 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
 
@@ -54,8 +58,33 @@ public class Config {
 
 	// Validate the extracted victims and messages and return an array of errors
 	// in case they exists
-	public String[] validate() {
+	public LinkedList<String> validate() {
 		// TODO: do the checks (see more in tests)
-		return new String[] {};
+		LinkedList<String> errors = new LinkedList<>();
+		Pattern emailRegex = Pattern.compile("^[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)+$");
+		for (int i = 0; i < victims.length; i++) {
+			Matcher m = emailRegex.matcher(victims[i]);
+			if (m.find() == false) {
+				errors.add("Victim " + (i + 1) + " (" + victims[i] + ") is not a valid email");
+			}
+		}
+
+		for (int i = 0; i < messages.length; i++) {
+			String subject = messages[i].subject;
+			String body = messages[i].body;
+
+			if (subject == null)
+				errors.add("Email " + (i + 1) + " has no subject");
+			else if (subject.isEmpty())
+				errors.add("Email " + (i + 1) + " has an empty subject");
+
+			if (body == null)
+				errors.add("Email " + (i + 1) + " has no body");
+			else if (body.isEmpty())
+				errors.add("Email " + (i + 1) + " has an empty body");
+
+		}
+
+		return errors;
 	}
 }

@@ -42,23 +42,23 @@ public class ConfigTest {
 
 	@Test
 	void validationWorks() {
-		var c = new Config("\"example.com\",\"a@com\",\"john@example.com\",",
+		var c = new Config("[\"example.com\",\"a@com\",\"john@example.com\"]",
 				"[" +
 						"{\"subject\": \"hello there\"}, " +
 						"{\"body\": \"hello there\"}, " +
 						"{\"unkown\": true}, " +
 						"{\"subject\": \"hello there\",\"body\": \"\"}," +
-						"{\"subject\": \"hello there\",\"body\": \"\"}" +
+						"{\"subject\": \"\",\"body\": \"hello there\"}" +
 						"]");
 		assertArrayEquals(new String[] {
-				"Victim 1 is not a valid email",
-				"Victim 2 is not a valid email",
+				"Victim 1 (example.com) is not a valid email",
+				"Victim 2 (a@com) is not a valid email",
 				"Email 1 has no body",
-				"Email 2 has no body",
+				"Email 2 has no subject",
 				"Email 3 has no subject",
 				"Email 3 has no body",
 				"Email 4 has an empty body",
 				"Email 5 has an empty subject",
-		}, c.validate());
+		}, c.validate().toArray());
 	}
 }

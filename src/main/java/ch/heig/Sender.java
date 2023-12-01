@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.IntSummaryStatistics;
+import java.util.LinkedList;
 import java.util.Random;
 
 public class Sender {
@@ -133,8 +134,8 @@ public class Sender {
 
 	private void loadConfig() {
 		config = new Config();
-		String[] errors = config.validate();
-		if (errors.length > 0) {
+		LinkedList<String> errors = config.validate();
+		if (errors.size() > 0) {
 			System.out.println("Some validation checks on configuration files:");
 			for (var err : errors) {
 				System.out.println("- " + err);
