@@ -82,4 +82,13 @@ public class Email {
 	public String[] getTo() {
 		return to;
 	}
+
+	public String toString() {
+		String result = "Email from " + from + " to ";
+		for (var t : to) {
+			result += t + ", ";
+		}
+		result += "\nContent:" + subject + "\n" + body;
+		return result;
+	}
 }
