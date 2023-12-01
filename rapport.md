@@ -45,12 +45,11 @@ TODO: generate Mermaid diagram
 **En résumé, notre programme suit les étapes suivantes:**
 1. `Main` crée un objet `Sender` 
    1. Vérifie la validité du premier paramètre passé au constructeur
-   1. Charge la configuration depuis les 2 fichiers
+   1. L'objet `config` charge la configuration depuis les 2 fichiers
    1. Il valide la configuration et affiche des erreurs si nécessaire
-1. `Main` appelle ensuite successivement chaque étape de la campagne et s'arrête en cas de retour `false` qui signifie qu'il y a eu une erreur et que le programme doit s'arrêter.
+1. `Main` appelle ensuite successivement les 2 étapes et s'arrête en cas de retour `false`, qui signifie qu'il y a eu une erreur et que le programme doit s'arrêter. Les exceptions sont égalements catchées.
    1. `Main` appelle `Sender.prepare()` pour lancer la génération les emails (aléatoirement depuis les valeurs de configuration) en s'assurant d'avoir des adresses uniques
-   1. `Main` appelle `Sender.connect()`, pour qu'il cherche à se connecter sur le port `1025` sur l'hôte `localhost` et génère une erreur s'il n'arrive pas s'y connecter.
-   1. `Main` appelle `Sender.send()` pour qu'il puisse finalement envoier les emails l'un après l'autre
+   1. `Main` appelle `Sender.connectAndSend()`, pour qu'il cherche à se connecter sur le port `1025` sur l'hôte `localhost` et génère une erreur s'il n'arrive pas s'y connecter. Si la connexion est établie, il peut envoyer les emails l'un après l'autre.
 1. Fin du programme
 
 **Exemples de dialogue**
