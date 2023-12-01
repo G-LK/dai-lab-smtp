@@ -34,38 +34,40 @@ public class Sender {
 
 		boolean result = false;
 		try (
-			Socket socket = new Socket("localhost", Main.SMTP_PORT);) {
+				Socket socket = new Socket("localhost", Main.SMTP_PORT);) {
 			result = connectAndSend(socket);
 		} catch (Exception e) {
 			System.out.println("failed to connect to localhost");
-			
+
 		}
-		return result;		
+		return result;
 	}
 
 	boolean connectAndSend(Socket socket) {
-		// TODO: check socket is not null or return false
-		// TODO: write a "ehlo localhost"
-	 	// TODO: give in and out streams
-		// TODO: when all messages have been sent, send a "quit"
 		boolean result = false;
-		if(socket != null) {
-			try {
+		if (socket == null)
+			return false;
+		try {
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+			BufferedReader in = new BufferedReader(
+					new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
 			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-		
-			
-			 out.write("ehlo localhost" + "\r\n");
-			 result = sendEmails(in, out);		
-			 out.flush();
-			 out.close();
-			} catch (IOException e) {
-				System.out.println("Failed to write message ehlo localhost to socket");
-			}
+
+			out.write("ehlo localhost\r\n");
+			consumeLines(in);
+
+			out.flush();
+			result = sendEmails(in, out);
+
+			out.write("quit\r\n");
+			consumeLines(in);
+
+			out.close();
+		} catch (IOException e) {
+			System.out.println("Failed to write message ehlo localhost to socket");
+		}
+		return result;
 	}
-	return result;
-}
 
 	boolean generateEmails() {
 		return true;
@@ -76,28 +78,34 @@ public class Sender {
 	}
 
 	private boolean sendEmails(BufferedReader in, BufferedWriter out) {
-		// TODO: read lines until there is no dash after first number
 		try {
-		String line;
-		while((line = in.readLine()) != null) {
-			if(line.charAt(3) != '-') { // 250-
-
+			for (var e : emails) {
+				for (var line : e.toRawEmailHeaderLines()) {
+					out.write(line);
+					consumeLines(in);
+				}
+				out.write(e.toRawEmailTextData());
+				consumeLines(in);
 			}
+		} catch (Exception e) {
+			System.out.println("Some email sending has failed...");
+			return false;
 		}
-	} catch(IOException e) {
-		System.out.println("cannot read line correctly");
+
+		return true;
 	}
 
-		// TODO: loop on all emails
-		for(var e : emails) {
-
+	private void consumeLines(BufferedReader in) {
+		try {
+			String line;
+			while ((line = in.readLine()) != null) {
+				if (line.charAt(3) != '-') { // 250-
+					break;
+				}
+			}
+		} catch (IOException e) {
+			System.out.println("cannot read line correctly");
 		}
-		// TODO: send each email intro line and
-		// TODO: read lines until there is no dash after first number (you can ignore
-		// the read lines' content)
-		// TODO: then write the message content in one time
-		// TODO: read line again
-		return true;
 	}
 
 	private void loadConfig() {
