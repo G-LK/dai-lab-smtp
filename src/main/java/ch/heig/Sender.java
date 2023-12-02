@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,7 +18,6 @@ public class Sender {
 	ArrayList<Email> emails;
 	Config config;
 	int groupsNumber;
-	private static Random random = new Random(42);
 
 	// TODO
 	public Sender(int groupsNumber) {
@@ -77,14 +77,21 @@ public class Sender {
 
 	boolean generateEmails() {
 		emails = new ArrayList<Email>(groupsNumber);
-		for (int i = 0; i < groupsNumber; i++) {
-			int randomMessageIndex = random.nextInt(config.messages.length);
-			FakeMessage msg = config.messages[randomMessageIndex];
-			int randomVictimsNumber = random.nextInt(Main.MAX_VICTIMS_PER_GROUP - Main.MIN_VICTIM_PER_GROUP)
-					+ Main.MIN_VICTIM_PER_GROUP;
-			String[] to = new String[randomVictimsNumber - 1];
-			String from;
+		FakeMessage msg;
+		String[] to;
+		String from;
+		SecureRandom random = new SecureRandom();
 
+		for (int i = 0; i < groupsNumber; i++) {
+
+			int randomMessageIndex = random.nextInt(config.messages.length);
+			msg = config.messages[randomMessageIndex];
+			int randomVictimsNumber = random.nextInt(
+					Main.MAX_VICTIMS_PER_GROUP - Main.MIN_VICTIM_PER_GROUP)
+					+ Main.MIN_VICTIM_PER_GROUP; // generate a number between in range [min;max]
+			to = new String[randomVictimsNumber - 1];
+
+			// Shuffle victims list before taking the first ones so we have a random
 			Collections.shuffle(Arrays.asList(config.victims));
 			from = config.victims[0];
 			for (int j = 1; j < randomVictimsNumber; j++) {
