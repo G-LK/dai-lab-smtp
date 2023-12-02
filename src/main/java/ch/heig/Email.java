@@ -86,11 +86,10 @@ public class Email {
 	}
 
 	public String toString() {
-		String result = "Email from " + from + " to ";
+		String result = "Email '" + subject + "' from <" + from + "> to ";
 		for (var t : to) {
-			result += t + ", ";
+			result += "<" + t + "> ";
 		}
-		result += "\nContent:" + subject + "\n" + body + "\n";
 		return result;
 	}
 }

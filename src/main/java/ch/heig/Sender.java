@@ -28,7 +28,7 @@ public class Sender {
 	}
 
 	public boolean prepare() {
-		return generateEmails();
+		return generateEmails(true);
 	}
 
 	// TODO:
@@ -75,7 +75,7 @@ public class Sender {
 		return result;
 	}
 
-	boolean generateEmails() {
+	boolean generateEmails(boolean printGeneratedList) {
 		emails = new ArrayList<Email>(groupsNumber);
 		FakeMessage msg;
 		String[] to;
@@ -100,10 +100,12 @@ public class Sender {
 
 			emails.add(new Email(msg.subject, msg.body, from, to));
 		}
+		if (!printGeneratedList)
+			return true;
 
-		System.out.println("Logging generated emails");
+		System.out.println("Generated emails:");
 		for (var e : emails) {
-			System.out.println(e);
+			System.out.println("- " + e);
 		}
 		return true;
 	}
