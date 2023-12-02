@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
-import java.util.Random;
 
 public class Sender {
 	ArrayList<Email> emails;
@@ -88,7 +87,7 @@ public class Sender {
 			int randomMessageIndex = random.nextInt(config.messages.length);
 			msg = config.messages[randomMessageIndex];
 			int randomVictimsNumber = random.nextInt(
-					Main.MAX_VICTIMS_PER_GROUP - Main.MIN_VICTIM_PER_GROUP)
+					Main.MAX_VICTIMS_PER_GROUP - Main.MIN_VICTIM_PER_GROUP + 1)
 					+ Main.MIN_VICTIM_PER_GROUP; // generate a number between in range [min;max]
 			to = new String[randomVictimsNumber - 1];
 
