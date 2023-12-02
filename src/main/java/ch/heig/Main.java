@@ -2,12 +2,12 @@ package ch.heig;
 
 public class Main {
 	// Constants of the program
-	final static int SMTP_PORT = 1025;
 	final static String SMTP_HOST = "localhost";
+	final static int SMTP_PORT = 1025;
+	final static int MIN_VICTIM_PER_GROUP = 2;
+	final static int MAX_VICTIMS_PER_GROUP = 5;
 	final static String VICTIMS_FILE = "victims.json";
-	static final int MAX_VICTIMS_PER_GROUP = 5;
-	static final int MIN_VICTIM_PER_GROUP = 2;
-	static final String MESSAGES_FILE = "messages.json";
+	final static String MESSAGES_FILE = "messages.json";
 
 	public static void main(String[] args) {
 		// Making sure the number of group is given and valid
