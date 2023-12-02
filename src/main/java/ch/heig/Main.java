@@ -30,12 +30,12 @@ public class Main {
 			Sender sender = new Sender(groupsNumber);
 			System.out.println("\n>> Starting fake emails campaign...");
 			System.out.println(
-					">> Preparing the " + groupsNumber
+					"\n>> Preparing the " + groupsNumber
 							+ " emails, senders and recipients. (With messages.json and victims.json)");
 			if (!sender.prepare())
 				exitWithFailures();
 			System.out.println(
-					">> Preparation done. Establishing connection on localhost:" + SMTP_PORT
+					"\n>> Preparation done. Establishing connection on localhost:" + SMTP_PORT
 							+ " and starting campaign...");
 			if (!sender.connectAndSend())
 				exitWithFailures();
@@ -48,7 +48,7 @@ public class Main {
 	}
 
 	public static void exitWithFailures() {
-		System.out.println(">> Fin du programme pour cause d'erreurs...");
+		System.out.println("\n>> Fin du programme pour cause d'erreurs...");
 		System.exit(1);
 	}
 }

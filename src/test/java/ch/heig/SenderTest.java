@@ -17,11 +17,10 @@ public class SenderTest {
 		Sender s = new Sender(5);
 		assertEquals(null, s.getEmails());
 
-		
 		// Run 100 times the email generation to make sure we can catch errors
 		// even with random in play
 		for (int i = 0; i < 100; i++) {
-			s.generateEmails();
+			s.generateEmails(false);
 			var emails = s.getEmails();
 			assertTrue(s.getEmails().size() > 0);
 			for (var e : emails) {
@@ -40,8 +39,6 @@ public class SenderTest {
 				assertTrue(e.getTo().length <= 4); // 5 at max minus the sender
 			}
 		}
-
-		// Add more tests related to README instructions...
 	}
 
 	@Test
