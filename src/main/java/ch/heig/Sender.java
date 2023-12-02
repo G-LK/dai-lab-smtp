@@ -55,16 +55,17 @@ public class Sender {
 
 			BufferedReader in = new BufferedReader(
 					new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-			BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-
-			writeAndLog(out, "ehlo localhost\r\n");
+			BufferedWriter out = new BufferedWriter(
+					new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+			// Consume first line of server introduction before anything else
 			consumeLines(in);
 
-			out.flush();
+			Thread.sleep(400);
+			writeLogAndConsumeLines(out, in, "ehlo localhost\r\n");
+
 			result = sendEmails(in, out);
 
-			writeAndLog(out, "quit\r\n");
-			consumeLines(in);
+			writeLogAndConsumeLines(out, in, "quit\r\n");
 
 			out.close();
 		} catch (IOException e) {
@@ -116,13 +117,13 @@ public class Sender {
 
 	private boolean sendEmails(BufferedReader in, BufferedWriter out) {
 		try {
+			int counter = 0;
 			for (var e : emails) {
+				System.out.println("\n>>>> Sending email " + (++counter));
 				for (var line : e.toRawEmailHeaderLines()) {
-					writeAndLog(out, line);
-					consumeLines(in);
+					writeLogAndConsumeLines(out, in, line);
 				}
-				writeAndLog(out, e.toRawEmailTextData());
-				consumeLines(in);
+				writeLogAndConsumeLines(out, in, e.toRawEmailTextData());
 			}
 		} catch (Exception e) {
 			System.out.println("Some email sending has failed...");
@@ -146,10 +147,13 @@ public class Sender {
 		}
 	}
 
-	private void writeAndLog(BufferedWriter out, String text) throws IOException, InterruptedException {
-		System.out.println("C: " + text);
-		out.write(text);
-		Thread.sleep(200);
+	private void writeLogAndConsumeLines(BufferedWriter out, BufferedReader in, String text)
+			throws IOException, InterruptedException {
+		System.out.print("C: " + text);
+		out.write(text); // it already contains the end of lines chars
+		out.flush();
+		consumeLines(in);
+		Thread.sleep(100); // a short sleep just to be able to avoid instant finish in the console
 	}
 
 	private void loadConfig() {
