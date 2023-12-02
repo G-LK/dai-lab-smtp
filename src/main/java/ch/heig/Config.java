@@ -20,18 +20,18 @@ public class Config {
 		load(readFile(Main.VICTIMS_FILE), readFile(Main.MESSAGES_FILE));
 	}
 
-	// For easy testing
+	// For easier testing
 	Config(String victimsJson, String messagesJson) {
 		load(victimsJson, messagesJson);
 	}
 
+	// Parse configurations to load it in config attributes
 	private void load(String victimsJson, String messagesJson) {
 		if (victimsJson == null || victimsJson.isEmpty() || messagesJson == null || messagesJson.isEmpty())
 			throw new RuntimeException();
 
-		// Parse content with the help of Gjson library
+		// Parse content with the help of Gson library
 		try {
-
 			Gson gson = new Gson();
 			victims = gson.fromJson(victimsJson, String[].class);
 			messages = gson.fromJson(messagesJson, FakeMessage[].class);
@@ -62,6 +62,8 @@ public class Config {
 	// in case they exists
 	public LinkedList<String> validate() {
 		LinkedList<String> errors = new LinkedList<>();
+
+		// Valide uniqueness and suffisance of victims list
 		HashSet<String> victimsStrings = new HashSet<String>();
 		for (var v : victims) {
 			victimsStrings.add(v);
@@ -74,6 +76,8 @@ public class Config {
 		if (victimsStrings.size() < victims.length)
 			errors.add("All victims addresses must be unique...");
 
+		// Make sure emails are valid (with a pretty basic regex)
+		// Regex adapted from https://stackoverflow.com/a/60282793
 		Pattern emailRegex = Pattern.compile("^[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)+$");
 		for (int i = 0; i < victims.length; i++) {
 			Matcher m = emailRegex.matcher(victims[i]);
@@ -82,6 +86,7 @@ public class Config {
 			}
 		}
 
+		// Check presence and non emptyness of subject and body fields in messages
 		for (int i = 0; i < messages.length; i++) {
 			String subject = messages[i].subject;
 			String body = messages[i].body;
@@ -95,7 +100,6 @@ public class Config {
 				errors.add("Email " + (i + 1) + " has no body");
 			else if (body.isEmpty())
 				errors.add("Email " + (i + 1) + " has an empty body");
-
 		}
 
 		return errors;

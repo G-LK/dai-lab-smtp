@@ -58,15 +58,4 @@ public class SenderTest {
 		assertEquals("I have a great deal for you\nRegards\nThe US president.", s.config.messages[1].body);
 		assertEquals(4, s.config.messages.length);
 	}
-
-	@Test
-	@Disabled
-	void emailsAreCorrectlySent() {
-		Sender s = new Sender(5);
-		s.prepare();
-
-		// TODO: write socket usage test if it is possible ?
-		// How can I can create a fake mock socket in another thread or virtual thread??
-		// s.connectAndSend(socket);
-	}
 }

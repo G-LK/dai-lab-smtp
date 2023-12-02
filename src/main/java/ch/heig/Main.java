@@ -1,7 +1,9 @@
 package ch.heig;
 
 public class Main {
+	// Constants of the program
 	final static int SMTP_PORT = 1025;
+	final static String SMTP_HOST = "localhost";
 	final static String VICTIMS_FILE = "victims.json";
 	static final int MAX_VICTIMS_PER_GROUP = 5;
 	static final int MIN_VICTIM_PER_GROUP = 2;
@@ -35,7 +37,7 @@ public class Main {
 			if (!sender.prepare())
 				exitWithFailures();
 			System.out.println(
-					"\n>> Preparation done. Establishing connection on localhost:" + SMTP_PORT
+					"\n>> Preparation done. Establishing connection on " + Main.SMTP_HOST + ":" + SMTP_PORT
 							+ " and starting campaign...");
 			if (!sender.connectAndSend())
 				exitWithFailures();

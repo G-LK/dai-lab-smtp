@@ -18,7 +18,7 @@ public class Sender {
 	Config config;
 	int groupsNumber;
 
-	// TODO
+	// Create a sender dedicated to send a certain amount of emails (1 email/group)
 	public Sender(int groupsNumber) {
 		if (groupsNumber < 1)
 			throw new RuntimeException();
@@ -26,55 +26,12 @@ public class Sender {
 		loadConfig();
 	}
 
+	// Prepare the campaign
 	public boolean prepare() {
 		return generateEmails(true);
 	}
 
-	// TODO:
-	public boolean connectAndSend() {
-		// TODO: open a socket on port Main.SMTP_PORT
-		// print error message in case of error and return false to exit
-
-		boolean result = false;
-		try (
-				Socket socket = new Socket("localhost", Main.SMTP_PORT);) {
-			result = connectAndSend(socket);
-		} catch (Exception e) {
-			System.out.println("failed to connect to localhost");
-
-		}
-		return result;
-	}
-
-	boolean connectAndSend(Socket socket) {
-		boolean result = false;
-		if (socket == null)
-			return false;
-		try {
-
-			BufferedReader in = new BufferedReader(
-					new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-			BufferedWriter out = new BufferedWriter(
-					new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
-			// Consume first line of server introduction before anything else
-			consumeLines(in);
-
-			Thread.sleep(400);
-			writeLogAndConsumeLines(out, in, "ehlo localhost\r\n");
-
-			result = sendEmails(in, out);
-
-			writeLogAndConsumeLines(out, in, "quit\r\n");
-
-			out.close();
-		} catch (IOException e) {
-			System.out.println("Failed to write message ehlo localhost to socket");
-		} catch (InterruptedException e) {
-			System.out.println("Sleep failed");
-		}
-		return result;
-	}
-
+	// Generate groupsNumber emails with random
 	boolean generateEmails(boolean printGeneratedList) {
 		emails = new ArrayList<Email>(groupsNumber);
 		FakeMessage msg;
@@ -86,9 +43,11 @@ public class Sender {
 
 			int randomMessageIndex = random.nextInt(config.messages.length);
 			msg = config.messages[randomMessageIndex];
+
+			// Generate a number between in range [min;max]
 			int randomVictimsNumber = random.nextInt(
 					Main.MAX_VICTIMS_PER_GROUP - Main.MIN_VICTIM_PER_GROUP + 1)
-					+ Main.MIN_VICTIM_PER_GROUP; // generate a number between in range [min;max]
+					+ Main.MIN_VICTIM_PER_GROUP;
 			to = new String[randomVictimsNumber - 1];
 
 			// Shuffle victims list before taking the first ones so we have a random
@@ -110,19 +69,56 @@ public class Sender {
 		return true;
 	}
 
-	public ArrayList<Email> getEmails() {
-		return emails;
+	// Connect to the SMTP server and send emails
+	public boolean connectAndSend() {
+		boolean result = false;
+		try (
+				Socket socket = new Socket(Main.SMTP_HOST, Main.SMTP_PORT);) {
+
+			try {
+				BufferedReader in = new BufferedReader(
+						new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+				BufferedWriter out = new BufferedWriter(
+						new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+
+				// Consume first line of server introduction before anything else
+				consumeLines(in);
+
+				// Sleep to avoid "You talk to soon" server error
+				Thread.sleep(400);
+
+				// Init emails exchange
+				writeThenLogAndConsumeLines(out, in, "ehlo localhost\r\n");
+
+				result = sendEmails(in, out);
+
+				// End of the emails exchange
+				writeThenLogAndConsumeLines(out, in, "quit\r\n");
+
+				out.close();
+			} catch (IOException e) {
+				System.out.println("Failed to write messages on socket");
+				result = false;
+			} catch (InterruptedException e) {
+				System.out.println("Sleep failed");
+				result = false;
+			}
+		} catch (Exception e) {
+			System.out.println("failed to connect to " + Main.SMTP_HOST);
+		}
+		return result;
 	}
 
+	// Send generated emails one after the other
 	private boolean sendEmails(BufferedReader in, BufferedWriter out) {
 		try {
 			int counter = 0;
 			for (var e : emails) {
 				System.out.println("\n>>>> Sending email " + (++counter));
 				for (var line : e.toRawEmailHeaderLines()) {
-					writeLogAndConsumeLines(out, in, line);
+					writeThenLogAndConsumeLines(out, in, line);
 				}
-				writeLogAndConsumeLines(out, in, e.toRawEmailTextData());
+				writeThenLogAndConsumeLines(out, in, e.toRawEmailTextData());
 			}
 		} catch (Exception e) {
 			System.out.println("Some email sending has failed...");
@@ -132,29 +128,31 @@ public class Sender {
 		return true;
 	}
 
-	private void consumeLines(BufferedReader in) {
-		try {
-			String line;
-			while ((line = in.readLine()) != null) {
-				System.out.println("S: " + line);
-				if (line.charAt(3) != '-') { // 250-
-					break;
-				}
-			}
-		} catch (IOException e) {
-			System.out.println("cannot read line correctly");
-		}
-	}
-
-	private void writeLogAndConsumeLines(BufferedWriter out, BufferedReader in, String text)
+	// Write something on output stream, log the message, and consume the lines back
+	private void writeThenLogAndConsumeLines(BufferedWriter out, BufferedReader in, String text)
 			throws IOException, InterruptedException {
-		System.out.print("C: " + text);
 		out.write(text); // it already contains the end of lines chars
+		System.out.print("C: " + text);
 		out.flush();
 		consumeLines(in);
 		Thread.sleep(100); // a short sleep just to be able to avoid instant finish in the console
 	}
 
+	// Read lines sent by the server until we find a line without any dash at char 3
+	// (after the 3 digits there a dash or a whitespace)
+	// We log the lines but we actually ignore the content of them because this
+	// is out of scope for this labo
+	private void consumeLines(BufferedReader in) throws IOException {
+		String line;
+		while ((line = in.readLine()) != null) {
+			System.out.println("S: " + line);
+			if (line.charAt(3) != '-') { // 250-
+				break;
+			}
+		}
+	}
+
+	// Load the config, validate it and show errors if necessary
 	private void loadConfig() {
 		config = new Config();
 		LinkedList<String> errors = config.validate();
@@ -167,4 +165,8 @@ public class Sender {
 		}
 	}
 
+	// A getter on emails used mostly for testing
+	public ArrayList<Email> getEmails() {
+		return emails;
+	}
 }
