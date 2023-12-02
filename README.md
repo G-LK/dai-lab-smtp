@@ -1,6 +1,8 @@
 DAI lab: SMTP
 =============
 
+**[See rapport.md](rapport.md)**
+
 Objectives
 ----------
 

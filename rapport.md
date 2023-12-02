@@ -2,9 +2,9 @@
 Groupe: Leonard Klasen et Samuel Roland
 
 ## Objectif
-Le but de ce laboratoire est de se familiariser avec le protocole SMTP en écrivant un programme Java permettant d'envoyer une campagne d'emails pranks (de blagues). Le but est d'intéragir directement avec un serveur SMTP via des sockets TCP Java, sans aide de librairie pour implémenter l'envoi d'emails en SMTP.
+Le but de ce laboratoire est de se familiariser avec le protocole SMTP en écrivant un programme Java permettant d'envoyer une campagne d'emails pranks (de blagues). Le but est d'interagir directement avec un serveur SMTP via des sockets TCP Java, sans aide de librairie pour implémenter l'envoi d'emails en SMTP.
 
-**Note: ce projet est fait uniquement dans un but d'apprentissage et ne doit jamais être utilisé sur un vrai serveur SMTP. Nous utilisons ici un serveur mock (maildev) qui permet de simuler l'envoi d'emails vers un vrai serveur.**
+**Note: ce projet est fait uniquement dans un but d'apprentissage et ne doit jamais être utilisé sur un vrai serveur SMTP. Nous utilisons ici un serveur mock (maildev) qui permet de simuler l'envoi d'emails vers un serveur réel.**
 
 ## Configuration
 La liste des adresses emails des victimes se trouvent dans `victims.json` et la liste des emails de pranks sont dans `messages.json`. Ces 2 fichiers de configurations doivent rester dans leur format actuels et doivent être du JSON valide.
@@ -15,7 +15,7 @@ Pour lancer le serveur maildev, on peut le faire avec Docker:
 docker run -d -p 1080:1080 -p 1025:1025 maildev/maildev
 ```
 
-A cette étape, il est déjà possible d'ouvrir l'interface web de maildev sur `localhost:1080`.
+À cette étape, il est déjà possible d'ouvrir l'interface web de maildev dans un navigateur sur `localhost:1080`.
 
 Pour lancer notre programme, il faut déjà cloner ce repository:
 ```
@@ -28,21 +28,31 @@ Il faut d'abord le compiler (avec Maven):
 mvn package
 ```
 
+*Note: Grâce au plugin `maven-shade-plugin` ce paquet contient également toutes les dépendances, la libraire Google Gson n'était pas trouvée par défaut.*
+
 Si nécessaire, il est possible de changer la liste des victimes (`victims.json`) et des messages (`messages.json`).
 
 Et pour lancer le fichier `.jar` créé sous target, il suffit de lancer:
 ```
-java -jar target/*.jar <number of groups>
+java -jar target/smtp-1.0.jar <number of groups>
 ```
 
-```
-java -XX:+ShowCodeDetailsInExceptionMessages -cp "./target/classes:$HOME/.m2/repository/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar:$HOME/.m2/repository/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar:$HOME/.m2/repository/junit/junit/4.10/junit-4.10.jar:$HOME/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" ch.heig.Main 4
-```
-où `<number of groups>` est un nombre positif de groupes souhaités. Chaque groupe recevra un email et est composé de 2 à 5 adresses de victimes. Une de ces adresses sera utilisée comme expéditeur. Un message est choisi au hasard parmi la liste et utilisé comme sujet et corps de l'email.
+Où `<number of groups>` est un nombre positif de groupes souhaités. Chaque groupe recevra un email et est composé de 2 à 5 adresses de victimes. Une de ces adresses sera utilisée comme expéditeur. Un message est choisi au hasard parmi la liste et utilisé comme sujet et corps de l'email.
 
 Dans l'interface web de maildev on devrait voir le nombre d'emails attendus reçus et le tour est joué !
 
 ## Fonctionnement
+Nous avons défini les constantes suivantes au début de `Main` afin de centraliser la configuration du programme si des changements sont nécessaires:
+```java
+// Constants of the program
+final static String SMTP_HOST = "localhost";
+final static int SMTP_PORT = 1025;
+static final int MIN_VICTIM_PER_GROUP = 2;
+static final int MAX_VICTIMS_PER_GROUP = 5;
+final static String VICTIMS_FILE = "victims.json";
+static final String MESSAGES_FILE = "messages.json";
+```
+
 Voici déjà un diagramme de classe pour avoir une idée du fonctionnement:
 TODO: generate Mermaid diagram
 
@@ -51,13 +61,14 @@ TODO: generate Mermaid diagram
    1. Vérifie la validité du premier paramètre passé au constructeur
    1. L'objet `config` charge la configuration depuis les 2 fichiers
    1. Il valide la configuration et affiche des erreurs si nécessaire
-1. `Main` appelle ensuite successivement les 2 étapes et s'arrête en cas de retour `false`, qui signifie qu'il y a eu une erreur et que le programme doit s'arrêter. Les exceptions sont égalements catchées.
+1. `Main` appelle ensuite successivement les 2 étapes et s'arrête en cas de retour `false`, qui signifie qu'il y a eu une erreur et que le programme doit s'arrêter. Les exceptions sont également catchées.
    1. `Main` appelle `Sender.prepare()` pour lancer la génération les emails (aléatoirement depuis les valeurs de configuration) en s'assurant d'avoir des adresses uniques
    1. `Main` appelle `Sender.connectAndSend()`, pour qu'il cherche à se connecter sur le port `1025` sur l'hôte `localhost` et génère une erreur s'il n'arrive pas s'y connecter. Si la connexion est établie, il peut envoyer les emails l'un après l'autre.
 1. Fin du programme
 
-**Exemples de dialogue**
+### Exemples de dialogue**
 TODO: inclure image du détails des échanges loggés dans la console
+
 
 **Tests**
 Nous avons écrit de nombreux tests unitaires avec JUnit et architecturé notre programme de façon à faciliter leurs écritures.
