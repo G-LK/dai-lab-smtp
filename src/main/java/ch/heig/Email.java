@@ -64,6 +64,7 @@ public class Email {
 		return lines;
 	}
 
+	// Some trivial getters
 	public String getSubject() {
 		return subject;
 	}

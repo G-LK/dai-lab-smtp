@@ -50,7 +50,8 @@ public class Sender {
 					+ Main.MIN_VICTIM_PER_GROUP;
 			to = new String[randomVictimsNumber - 1];
 
-			// Shuffle victims list before taking the first ones so we have a random
+			// Shuffle victims list before taking the first ones
+			// so we have a random generation
 			Collections.shuffle(Arrays.asList(config.victims));
 			from = config.victims[0];
 			for (int j = 1; j < randomVictimsNumber; j++) {
