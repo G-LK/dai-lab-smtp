@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 public class Config {
 	String[] victims;
@@ -28,9 +30,14 @@ public class Config {
 			throw new RuntimeException();
 
 		// Parse content with the help of Gjson library
-		Gson gson = new Gson();
-		victims = gson.fromJson(victimsJson, String[].class);
-		messages = gson.fromJson(messagesJson, FakeMessage[].class);
+		try {
+
+			Gson gson = new Gson();
+			victims = gson.fromJson(victimsJson, String[].class);
+			messages = gson.fromJson(messagesJson, FakeMessage[].class);
+		} catch (JsonSyntaxException e) {
+			throw new JsonSyntaxException("Invalid json format in one of the configuration file: " + e);
+		}
 	}
 
 	// Read a given file entirely
@@ -54,8 +61,19 @@ public class Config {
 	// Validate the extracted victims and messages and return an array of errors
 	// in case they exists
 	public LinkedList<String> validate() {
-		// TODO: do the checks (see more in tests)
 		LinkedList<String> errors = new LinkedList<>();
+		HashSet<String> victimsStrings = new HashSet<String>();
+		for (var v : victims) {
+			victimsStrings.add(v);
+		}
+
+		if (victims.length < Main.MAX_VICTIMS_PER_GROUP)
+			errors.add("Only " + victims.length + " unique victims given, a minimum of "
+					+ Main.MAX_VICTIMS_PER_GROUP + " unique emails is required !");
+
+		if (victimsStrings.size() < victims.length)
+			errors.add("All victims addresses must be unique...");
+
 		Pattern emailRegex = Pattern.compile("^[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\\.[a-zA-Z0-9]+)+$");
 		for (int i = 0; i < victims.length; i++) {
 			Matcher m = emailRegex.matcher(victims[i]);

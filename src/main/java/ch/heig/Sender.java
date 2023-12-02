@@ -160,7 +160,7 @@ public class Sender {
 		config = new Config();
 		LinkedList<String> errors = config.validate();
 		if (errors.size() > 0) {
-			System.out.println("Some validation checks on configuration files:");
+			System.out.println("Some validation on configuration files failed:");
 			for (var err : errors) {
 				System.out.println("- " + err);
 			}

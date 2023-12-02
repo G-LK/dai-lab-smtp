@@ -28,7 +28,6 @@ public class ConfigTest {
 
 	@Test
 	void loadConfigManageErrors() {
-		// TODO: should we change the exception class ??
 		// Empty files
 		assertThrows(RuntimeException.class, () -> {
 			new Config("", null);
@@ -40,8 +39,29 @@ public class ConfigTest {
 	}
 
 	@Test
+	void configValidationRequiresAMinimumOfUniqueVictims() {
+		// Just a victim
+		var c = new Config("[\"john@example.com\"]",
+				"[{\"subject\": \"hello there\",\"body\": \"hello there\"}]");
+
+		assertArrayEquals(new String[] {
+				"Only 1 unique victims given, a minimum of 5 unique emails is required !"
+		}, c.validate().toArray());
+
+		// 5 non unique victims are not valid
+		var c2 = new Config(
+				"[\"john@example.com\",\"john@example.com\",\"john@example.com\",\"john@example.com\",\"john@example.com\"]",
+				"[{\"subject\": \"hello there\",\"body\": \"hello there\"}]");
+
+		assertArrayEquals(new String[] {
+				"All victims addresses must be unique..."
+		}, c2.validate().toArray());
+	}
+
+	@Test
 	void validationWorks() {
-		var c = new Config("[\"example.com\",\"a@com\",\"john@example.com\"]",
+		var c = new Config(
+				"[\"example.com\",\"a@com\",\"john@example.com\",\"dasdf@example.com\",\"gggww@example.com\"]",
 				"[" +
 						"{\"subject\": \"hello there\"}, " +
 						"{\"body\": \"hello there\"}, " +
