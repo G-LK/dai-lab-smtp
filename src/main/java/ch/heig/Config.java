@@ -29,9 +29,7 @@ public class Config {
 
 		// Parse content with the help of Gjson library
 		Gson gson = new Gson();
-		System.out.println("victimsJson: " + victimsJson);
 		victims = gson.fromJson(victimsJson, String[].class);
-		System.out.println("messagesJson: " + messagesJson);
 		messages = gson.fromJson(messagesJson, FakeMessage[].class);
 	}
 

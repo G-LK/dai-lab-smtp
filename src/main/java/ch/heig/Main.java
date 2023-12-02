@@ -28,13 +28,14 @@ public class Main {
 		// Starting sender process
 		try {
 			Sender sender = new Sender(groupsNumber);
-			System.out.println("\nStarting fake emails campaign...");
+			System.out.println("\n>> Starting fake emails campaign...");
 			System.out.println(
-					"Preparing the emails, senders and recipients. (Randomly generated from data/messages.json and data/victims.txt)");
+					">> Preparing the " + groupsNumber
+							+ " emails, senders and recipients. (With messages.json and victims.json)");
 			if (!sender.prepare())
 				exitWithFailures();
 			System.out.println(
-					"Preparation done. Establishing connection on localhost:" + SMTP_PORT
+					">> Preparation done. Establishing connection on localhost:" + SMTP_PORT
 							+ " and starting campaign...");
 			if (!sender.connectAndSend())
 				exitWithFailures();
@@ -43,11 +44,11 @@ public class Main {
 			exitWithFailures();
 		}
 
-		System.out.println("\nCampaign done !");
+		System.out.println("\n>> Campaign done !");
 	}
 
 	public static void exitWithFailures() {
-		System.out.println("Fin du programme pour cause d'erreurs...");
+		System.out.println(">> Fin du programme pour cause d'erreurs...");
 		System.exit(1);
 	}
 }
