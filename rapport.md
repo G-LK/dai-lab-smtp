@@ -132,10 +132,10 @@ Nous avons défini les constantes suivantes au début de `Main` afin de centrali
 // Constants of the program
 final static String SMTP_HOST = "localhost";
 final static int SMTP_PORT = 1025;
-static final int MIN_VICTIM_PER_GROUP = 2;
-static final int MAX_VICTIMS_PER_GROUP = 5;
+final static int MIN_VICTIM_PER_GROUP = 2;
+final static int MAX_VICTIMS_PER_GROUP = 5;
 final static String VICTIMS_FILE = "victims.json";
-static final String MESSAGES_FILE = "messages.json";
+final static String MESSAGES_FILE = "messages.json";
 ```
 
 Voici déjà un diagramme de classe pour avoir une idée du fonctionnement:
