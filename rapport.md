@@ -139,7 +139,74 @@ static final String MESSAGES_FILE = "messages.json";
 ```
 
 Voici déjà un diagramme de classe pour avoir une idée du fonctionnement:
-TODO: generate Mermaid diagram
+
+```mermaid
+classDiagram
+direction BT
+class Main {
+  + Main() 
+  ~ String MESSAGES_FILE
+  ~ int SMTP_PORT
+  ~ String SMTP_HOST
+  ~ int MIN_VICTIM_PER_GROUP
+  ~ int MAX_VICTIMS_PER_GROUP
+  ~ String VICTIMS_FILE
+  + exitWithFailures() void
+  + main(String[]) void
+}
+
+class Sender {
+  + Sender(int) 
+  ~ Config config
+  ~ ArrayList~Email~ emails
+  ~ int groupsNumber
+  - loadConfig() void
+  + prepare() boolean
+  + getEmails() ArrayList~Email~
+  ~ generateEmails(boolean) boolean
+  - writeThenLogAndConsumeLines(BufferedWriter, BufferedReader, String) void
+  + connectAndSend() boolean
+  - consumeLines(BufferedReader) void
+  - sendEmails(BufferedReader, BufferedWriter) boolean
+}
+class Email {
+  + Email(String, String, String, String[]) 
+  - String subject
+  - String[] to
+  - String body
+  - String CONTENT_TYPE
+  - String from
+  + toRawEmailTextData() String
+  + getTo() String[]
+  + getSubject() String
+  + getBody() String
+  + getBase64EncodedSubject(String) String
+  + toString() String
+  + toRawEmailHeaderLines() String[]
+  + getFrom() String
+}
+class Config {
+  + Config() 
+  ~ Config(String, String) 
+  ~ FakeMessage[] messages
+  ~ String[] victims
+  + validate() LinkedList~String~
+  - readFile(String) String?
+  - load(String, String) void
+}
+class FakeMessage {
+  + FakeMessage() 
+  ~ String subject
+  ~ String body
+}
+
+Main --> Sender : exécute
+Sender "1" --> "*" Email : envoie
+Sender "1" --> "1..*" Config : nécessite
+Email "1" --> "1..*" Config : nécessite
+Config "1" --> "1..*" FakeMessage : nécessite
+
+```
 
 **En résumé, notre programme suit les étapes suivantes:**
 1. `Main` crée un objet `Sender` 
