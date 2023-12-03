@@ -142,15 +142,15 @@ Voici déjà un diagramme de classe pour avoir une idée du fonctionnement:
 
 ```mermaid
 classDiagram
-direction BT
+direction LR
 class Main {
   + Main() 
-  ~ String MESSAGES_FILE
-  ~ int SMTP_PORT
-  ~ String SMTP_HOST
-  ~ int MIN_VICTIM_PER_GROUP
-  ~ int MAX_VICTIMS_PER_GROUP
-  ~ String VICTIMS_FILE
+  ~ String MESSAGES_FILE$ 
+  ~ int SMTP_PORT$
+  ~ String SMTP_HOST$
+  ~ int MIN_VICTIM_PER_GROUP$
+  ~ int MAX_VICTIMS_PER_GROUP$
+  ~ String VICTIMS_FILE$
   + exitWithFailures() void
   + main(String[]) void
 }
@@ -174,7 +174,7 @@ class Email {
   - String subject
   - String[] to
   - String body
-  - String CONTENT_TYPE
+  - String CONTENT_TYPE$
   - String from
   + toRawEmailTextData() String
   + getTo() String[]
@@ -203,10 +203,11 @@ class FakeMessage {
 Main --> Sender : exécute
 Sender "1" --> "*" Email : envoie
 Sender "1" --> "1..*" Config : nécessite
-Email "1" --> "1..*" Config : nécessite
 Config "1" --> "1..*" FakeMessage : nécessite
 
 ```
+Note : dans le diagramme, à la fin des attributs, le caractère '$' signifie que 
+notre attribut est static.
 
 **En résumé, notre programme suit les étapes suivantes:**
 1. `Main` crée un objet `Sender` 
